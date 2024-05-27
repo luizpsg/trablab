@@ -1,22 +1,26 @@
-package com.advanced.comidinhasveganas.entities;
+package com.luizpsg.advanced.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "tb_cardapio")
 public class ItemCardapio {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String nome;
-  private double preco;
+  private Double preco;
 
   public ItemCardapio() {
   }
 
-  public ItemCardapio(String nome, double preco) {
+  public ItemCardapio(Long id, String nome, Double preco) {
+    this.id = id;
     this.nome = nome;
     this.preco = preco;
   }
@@ -37,11 +41,16 @@ public class ItemCardapio {
     this.nome = nome;
   }
 
-  public double getPreco() {
+  public Double getPreco() {
     return preco;
   }
 
-  public void setPreco(double preco) {
+  public void setPreco(Double preco) {
     this.preco = preco;
+  }
+
+  @Override
+  public String toString() {
+    return "ItemCardapio [id=" + id + ", nome=" + nome + ", preco=" + preco + "]";
   }
 }

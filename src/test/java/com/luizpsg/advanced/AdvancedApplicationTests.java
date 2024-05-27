@@ -1,10 +1,10 @@
-package com.advanced.comidinhasveganas;
+package com.luizpsg.advanced;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ComidinhasveganasApplicationTests {
+class AdvancedApplicationTests {
 
 	@Test
 	void contextLoads() {
