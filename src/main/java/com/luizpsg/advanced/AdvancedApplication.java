@@ -49,23 +49,51 @@ public class AdvancedApplication implements CommandLineRunner {
       inicializarMesas();
       inicializarCardapio();
 
-      Cliente cliente1 = cadastrarOuObterCliente(sc, "123456789", "Luiz");
-      criarRequisicao(cliente1, 4);
+      boolean sair = false;
+      while (!sair) {
+        exibirMenu();
+        int opcao = sc.nextInt();
+        sc.nextLine(); // Consumir nova linha
 
-      Cliente cliente2 = cadastrarOuObterCliente(sc, "12312", "Paulo");
-      criarRequisicao(cliente2, 7);
-
-      atualizarFilaDeRequisicoes();
-
-      processarPedidos(sc);
-
-      listarPedidos();
-
-      encerrarConta(sc);
+        switch (opcao) {
+          case 1:
+            cadastrarCliente(sc);
+            break;
+          case 2:
+            criarRequisicao(sc);
+            break;
+          case 3:
+            processarPedidos(sc);
+            break;
+          case 4:
+            encerrarConta(sc);
+            atualizarFilaDeRequisicoes();
+            break;
+          case 5:
+            listarPedidos();
+            break;
+          case 0:
+            sair = true;
+            break;
+          default:
+            System.out.println("Opção inválida.");
+        }
+      }
     } catch (Exception e) {
       System.out.println("Ocorreu um erro: " + e.getMessage());
       e.printStackTrace();
     }
+  }
+
+  private void exibirMenu() {
+    System.out.println("=== Sistema de Gerenciamento de Restaurante ===");
+    System.out.println("1. Cadastrar Cliente");
+    System.out.println("2. Criar Requisição");
+    System.out.println("3. Adicionar Pedido");
+    System.out.println("4. Encerrar Conta");
+    System.out.println("5. Listar Pedidos");
+    System.out.println("0. Sair");
+    System.out.print("Escolha uma opção: ");
   }
 
   private void inicializarMesas() {
@@ -95,17 +123,37 @@ public class AdvancedApplication implements CommandLineRunner {
     }
   }
 
-  private Cliente cadastrarOuObterCliente(Scanner sc, String telefone, String nome) {
-    return clienteService.findByTelefone(telefone)
+  private void cadastrarCliente(Scanner sc) {
+    System.out.print("Digite o telefone do cliente: ");
+    String telefone = sc.nextLine();
+
+    Cliente cliente = clienteService.findByTelefone(telefone)
         .orElseGet(() -> {
-          Cliente cliente = new Cliente(null, nome, telefone);
-          return clienteService.insert(cliente);
+          System.out.print("Digite o nome do cliente: ");
+          String nome = sc.nextLine();
+          Cliente novoCliente = new Cliente(null, nome, telefone);
+          return clienteService.insert(novoCliente);
         });
+
+    System.out.println("Cliente cadastrado: " + cliente);
   }
 
-  private Requisicao criarRequisicao(Cliente cliente, int quantidadePessoas) {
+  private void criarRequisicao(Scanner sc) {
+    Cliente cliente = receberCliente(sc);
+    System.out.print("Digite a quantidade de pessoas: ");
+    int quantidadePessoas = sc.nextInt();
+    sc.nextLine(); // Consumir nova linha
+
     Requisicao req = new Requisicao(null, cliente, quantidadePessoas, null, false, false, null, new ArrayList<>());
-    return requisicaoService.insert(req);
+    requisicaoService.insert(req);
+    atualizarFilaDeRequisicoes();
+  }
+
+  private Cliente receberCliente(Scanner sc) {
+    System.out.print("Digite o telefone do cliente: ");
+    String telefone = sc.nextLine();
+    return clienteService.findByTelefone(telefone)
+        .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
   }
 
   private void atualizarFilaDeRequisicoes() {
@@ -146,7 +194,7 @@ public class AdvancedApplication implements CommandLineRunner {
         System.out.println("Total atualizado: " + req.getTotalConta());
       }
 
-      System.out.println("Deseja continuar? (s/n)");
+      System.out.print("Deseja continuar adicionando pedidos? (s/n): ");
       continuar = !sc.nextLine().equalsIgnoreCase("n");
     }
   }
@@ -154,19 +202,20 @@ public class AdvancedApplication implements CommandLineRunner {
   private Requisicao getRequisicaoDaMesaSelecionada(Scanner sc) {
     System.out.println("Mesas ocupadas:");
     System.out.println(listarMesasOcupadas());
-    System.out.println("Selecione a mesa para adicionar pedidos:");
+    System.out.print("Selecione a mesa para adicionar pedidos: ");
     Long idMesa = sc.nextLong();
     sc.nextLine(); // Consome o restante da linha
-    return requisicaoService.findRequisicaoByMesaId(idMesa).orElse(null);
+    return requisicaoService.findRequisicaoByMesaId(idMesa)
+        .orElseThrow(() -> new RuntimeException("Requisição não encontrada para a mesa selecionada"));
   }
 
   private Long receberIdItemCardapio(Scanner sc) {
-    System.out.println("Digite o id do item do cardápio:");
+    System.out.print("Digite o id do item do cardápio: ");
     return sc.nextLong();
   }
 
   private int receberQuantidade(Scanner sc) {
-    System.out.println("Digite a quantidade:");
+    System.out.print("Digite a quantidade: ");
     return sc.nextInt();
   }
 
@@ -208,7 +257,7 @@ public class AdvancedApplication implements CommandLineRunner {
   private void encerrarConta(Scanner sc) {
     System.out.println("Mesas ocupadas:");
     System.out.println(listarMesasOcupadas());
-    System.out.println("Selecione a mesa para encerrar a conta:");
+    System.out.print("Selecione a mesa para encerrar a conta: ");
     Long idMesa = sc.nextLong();
     sc.nextLine(); // Consome o restante da linha
 
