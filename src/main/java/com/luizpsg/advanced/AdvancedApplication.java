@@ -74,7 +74,7 @@ public class AdvancedApplication implements CommandLineRunner {
             break;
           case 0:
             sair = true;
-            break;
+            System.exit(0);
           default:
             System.out.println("Opção inválida.");
         }
