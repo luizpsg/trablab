@@ -52,4 +52,11 @@ public class ClienteService {
     entity.setNome(cliente.getNome());
     entity.setTelefone(cliente.getTelefone());
   }
+
+  public Cliente cadastrarCliente(String nome, String telefone) {
+    return findByTelefone(telefone).orElseGet(() -> {
+      Cliente novoCliente = new Cliente(null, nome, telefone);
+      return insert(novoCliente);
+    });
+  }
 }

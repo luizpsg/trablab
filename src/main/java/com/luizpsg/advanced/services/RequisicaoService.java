@@ -1,5 +1,6 @@
 package com.luizpsg.advanced.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.luizpsg.advanced.entities.Requisicao;
+import com.luizpsg.advanced.entities.Cliente;
+import com.luizpsg.advanced.entities.Mesa;
 import com.luizpsg.advanced.repositories.RequisicaoRepository;
 
 @Service
@@ -15,6 +18,9 @@ public class RequisicaoService {
 
   @Autowired
   private RequisicaoRepository repository;
+
+  @Autowired
+  private MesaService mesaService;
 
   public List<Requisicao> findAll() {
     return repository.findAll();
@@ -59,5 +65,45 @@ public class RequisicaoService {
     return repository.findAll().stream()
         .filter(r -> r.getMesa().getId().equals(mesaId) && !r.isFinalizada())
         .findFirst();
+  }
+
+  public Requisicao criarRequisicao(Cliente cliente, int quantidadePessoas) {
+    Requisicao requisicao = new Requisicao(null, cliente, quantidadePessoas, null, false, false, LocalDateTime.now(),
+        null);
+    return insert(requisicao);
+  }
+
+  public void atualizarFilaDeRequisicoes() {
+    findAll().stream()
+        .filter(req -> !req.isAtendida())
+        .forEach(req -> {
+          Mesa mesa = mesaService.findMesaDisponivel(req.getQuantidadePessoas())
+              .orElse(null);
+          if (mesa != null) {
+            atribuirMesaARequisicao(req, mesa);
+          }
+        });
+  }
+
+  private void atribuirMesaARequisicao(Requisicao req, Mesa mesa) {
+    mesa.setOcupada(true);
+    req.setMesa(mesa);
+    req.setAtendida(true);
+    req.setDataHoraInicio(LocalDateTime.now());
+    update(req.getId(), req);
+    mesaService.update(mesa.getId(), mesa);
+  }
+
+  public void encerrarConta(Long idMesa) {
+    Requisicao req = findRequisicaoByMesaId(idMesa)
+        .orElseThrow(() -> new RuntimeException("Requisição não encontrada para a mesa selecionada"));
+
+    req.setFinalizada(true);
+    req.setDataHoraFim(LocalDateTime.now());
+    update(req.getId(), req);
+
+    Mesa mesa = req.getMesa();
+    mesa.setOcupada(false);
+    mesaService.update(mesa.getId(), mesa);
   }
 }

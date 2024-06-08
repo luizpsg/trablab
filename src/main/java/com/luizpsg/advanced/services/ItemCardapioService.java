@@ -2,6 +2,7 @@ package com.luizpsg.advanced.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,5 +46,11 @@ public class ItemCardapioService {
   private void updateData(ItemCardapio entity, ItemCardapio item) {
     entity.setNome(item.getNome());
     entity.setPreco(item.getPreco());
+  }
+
+  public String imprimirCardapio() {
+    return findAll().stream()
+        .map(ItemCardapio::toString)
+        .collect(Collectors.joining("\n"));
   }
 }
