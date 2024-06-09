@@ -5,10 +5,18 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.luizpsg.advanced.dto.ErrorResponse;
 import com.luizpsg.advanced.entities.Pedido;
 import com.luizpsg.advanced.services.PedidoService;
+import com.luizpsg.advanced.services.RequisicaoService;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -16,6 +24,9 @@ public class PedidoController {
 
   @Autowired
   private PedidoService pedidoService;
+
+  @Autowired
+  private RequisicaoService requisicaoService;
 
   @GetMapping
   public ResponseEntity<List<Pedido>> findAll() {
@@ -29,9 +40,13 @@ public class PedidoController {
     return ResponseEntity.ok().body(obj);
   }
 
-  @PostMapping("/{RequisicaoId}")
-  public ResponseEntity<Pedido> insert(@PathVariable Long RequisicaoId, @RequestBody Pedido obj) {
-    obj = pedidoService.insert(obj, RequisicaoId);
+  @PostMapping("/{requisicaoId}")
+  public ResponseEntity<?> insert(@PathVariable Long requisicaoId, @RequestBody Pedido obj) {
+    if (!requisicaoService.isAtendidaEnaoFinalizada(requisicaoId)) {
+      ErrorResponse errorResponse = new ErrorResponse("Requisição não atendida ou já finalizada");
+      return ResponseEntity.badRequest().body(errorResponse);
+    }
+    obj = pedidoService.insert(obj, requisicaoId);
     return ResponseEntity.ok().body(obj);
   }
 

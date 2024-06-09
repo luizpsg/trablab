@@ -47,6 +47,12 @@ public class RequisicaoController {
     return ResponseEntity.noContent().build();
   }
 
+  @PutMapping("/encerrar/{idMesa}")
+  public ResponseEntity<Void> encerrarConta(@PathVariable Long idMesa) {
+    requisicaoService.encerrarConta(idMesa);
+    return ResponseEntity.noContent().build();
+  }
+
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable Long id) {
     requisicaoService.delete(id);

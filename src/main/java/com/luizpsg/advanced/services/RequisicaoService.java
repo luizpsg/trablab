@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.luizpsg.advanced.entities.Requisicao;
 import com.luizpsg.advanced.entities.Cliente;
 import com.luizpsg.advanced.entities.Mesa;
+import com.luizpsg.advanced.entities.Requisicao;
 import com.luizpsg.advanced.repositories.RequisicaoRepository;
 
 @Service
@@ -67,12 +67,6 @@ public class RequisicaoService {
         .findFirst();
   }
 
-  // public Requisicao criarRequisicao(Cliente cliente, int quantidadePessoas) {
-  // Requisicao requisicao = new Requisicao(null, cliente, quantidadePessoas,
-  // null, false, false, LocalDateTime.now());
-  // return insert(requisicao);
-  // }
-
   public Requisicao criarRequisicao(Cliente cliente, int quantidadePessoas) {
     Requisicao requisicao = new Requisicao();
     requisicao.setCliente(cliente);
@@ -106,6 +100,14 @@ public class RequisicaoService {
     Requisicao req = findRequisicaoByMesaId(idMesa)
         .orElseThrow(() -> new RuntimeException("Requisição não encontrada para a mesa selecionada"));
 
+    double totalConta = req.getPedidos().stream()
+        .flatMap(pedido -> pedido.getItens().stream())
+        .mapToDouble(item -> item.getQuantidade() * item.getPreco())
+        .sum();
+    double totalPorPessoa = totalConta / req.getQuantidadePessoas();
+
+    req.setTotalConta(totalConta);
+    req.setTotalPorPessoa(totalPorPessoa);
     req.setFinalizada(true);
     req.setDataHoraFim(LocalDateTime.now());
     update(req.getId(), req);
@@ -113,5 +115,10 @@ public class RequisicaoService {
     Mesa mesa = req.getMesa();
     mesa.setOcupada(false);
     mesaService.update(mesa.getId(), mesa);
+  }
+
+  public boolean isAtendidaEnaoFinalizada(Long requisicaoId) {
+    Optional<Requisicao> requisicao = findById(requisicaoId);
+    return requisicao.isPresent() && requisicao.get().isAtendida() && !requisicao.get().isFinalizada();
   }
 }
