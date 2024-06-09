@@ -40,7 +40,7 @@ public class PedidoItemCardapioController {
   public ResponseEntity<List<PedidoItemCardapio>> insertMultiple(@PathVariable Long pedidoId,
       @RequestBody List<ItemRequest> itemRequests) {
     List<PedidoItemCardapio> updatedItens = service.insertMultiple(pedidoId, itemRequests);
-    return ResponseEntity.ok(updatedItens);
+    return ResponseEntity.ok().body(updatedItens);
   }
 
   @DeleteMapping("/{pedidoId}/{itemId}")
