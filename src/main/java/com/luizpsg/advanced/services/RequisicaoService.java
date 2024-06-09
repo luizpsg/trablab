@@ -16,6 +16,8 @@ import com.luizpsg.advanced.repositories.RequisicaoRepository;
 @Service
 public class RequisicaoService {
 
+  private static final Double SERVICE_TAX = 1.1;
+
   @Autowired
   private RequisicaoRepository repository;
 
@@ -96,13 +98,14 @@ public class RequisicaoService {
     mesaService.update(mesa.getId(), mesa);
   }
 
-  public void encerrarConta(Long idMesa) {
+  @Transactional
+  public Requisicao encerrarConta(Long idMesa) {
     Requisicao req = findRequisicaoByMesaId(idMesa)
         .orElseThrow(() -> new RuntimeException("Requisição não encontrada para a mesa selecionada"));
 
     double totalConta = req.getPedidos().stream()
         .flatMap(pedido -> pedido.getItens().stream())
-        .mapToDouble(item -> item.getQuantidade() * item.getPreco())
+        .mapToDouble(item -> item.getQuantidade() * item.getPreco() * SERVICE_TAX)
         .sum();
     double totalPorPessoa = totalConta / req.getQuantidadePessoas();
 
@@ -115,6 +118,7 @@ public class RequisicaoService {
     Mesa mesa = req.getMesa();
     mesa.setOcupada(false);
     mesaService.update(mesa.getId(), mesa);
+    return req;
   }
 
   public boolean isAtendidaEnaoFinalizada(Long requisicaoId) {
