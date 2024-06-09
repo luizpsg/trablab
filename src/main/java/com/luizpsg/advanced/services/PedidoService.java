@@ -8,10 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.luizpsg.advanced.entities.Pedido;
-import com.luizpsg.advanced.entities.ItemCardapio;
 import com.luizpsg.advanced.entities.Requisicao;
 import com.luizpsg.advanced.repositories.PedidoRepository;
-import com.luizpsg.advanced.repositories.ItemCardapioRepository;
 import com.luizpsg.advanced.repositories.RequisicaoRepository;
 
 @Service
@@ -19,9 +17,6 @@ public class PedidoService {
 
   @Autowired
   private PedidoRepository repository;
-
-  @Autowired
-  private ItemCardapioRepository itemCardapioRepository;
 
   @Autowired
   private RequisicaoRepository requisicaoRepository;
