@@ -41,6 +41,12 @@ public class RequisicaoController {
     return ResponseEntity.ok().body(obj);
   }
 
+  @PutMapping("/atualizarFilaDeRequisicoes")
+  public ResponseEntity<Void> atualizarFilaDeRequisicoes() {
+    requisicaoService.atualizarFilaDeRequisicoes();
+    return ResponseEntity.noContent().build();
+  }
+
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable Long id) {
     requisicaoService.delete(id);

@@ -1,11 +1,17 @@
 package com.luizpsg.advanced.entities;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -20,19 +26,15 @@ public class Pedido {
   @JoinColumn(name = "requisicao_id")
   private Requisicao requisicao;
 
-  @ManyToOne
-  @JoinColumn(name = "item_id")
-  private ItemCardapio item;
-
-  private Integer quantidade;
+  @OneToMany(mappedBy = "id.pedido")
+  @JsonIgnore
+  private Set<PedidoItemCardapio> itens = new HashSet<>();
 
   public Pedido() {
   }
 
-  public Pedido(Long id, ItemCardapio item, Integer quantidade) {
-    this.id = id;
-    this.item = item;
-    this.quantidade = quantidade;
+  public Pedido(Requisicao requisicao) {
+    this.requisicao = requisicao;
   }
 
   public Long getId() {
@@ -51,24 +53,20 @@ public class Pedido {
     this.requisicao = requisicao;
   }
 
-  public ItemCardapio getItem() {
-    return item;
+  public Set<PedidoItemCardapio> getItens() {
+    return itens;
   }
 
-  public void setItem(ItemCardapio item) {
-    this.item = item;
-  }
-
-  public Integer getQuantidade() {
-    return quantidade;
-  }
-
-  public void setQuantidade(Integer quantidade) {
-    this.quantidade = quantidade;
+  public Double getTotal() {
+    double sum = 0.0;
+    for (PedidoItemCardapio x : itens) {
+      sum += x.getSubTotal();
+    }
+    return sum;
   }
 
   @Override
   public String toString() {
-    return "Pedido [id=" + id + ", item=" + item + ", quantidade=" + quantidade + "]";
+    return "Pedido [id=" + id + ", requisicao=" + requisicao + "]";
   }
 }

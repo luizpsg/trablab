@@ -35,33 +35,15 @@ public class PedidoService {
   }
 
   @Transactional
-  public Pedido insert(Pedido pedido) {
+  public Pedido insert(Pedido pedido, Long idRequisicao) {
+    Requisicao requisicao = requisicaoRepository.findById(idRequisicao)
+        .orElseThrow(() -> new RuntimeException("Requisição não encontrada"));
+    pedido.setRequisicao(requisicao);
     return repository.save(pedido);
   }
 
   @Transactional
   public void delete(Long id) {
     repository.deleteById(id);
-  }
-
-  public void adicionarItemAoPedido(Long idRequisicao, Long idItemCardapio, int quantidade) {
-    Requisicao req = requisicaoRepository.findById(idRequisicao)
-        .orElseThrow(() -> new RuntimeException("Requisição não encontrada"));
-    ItemCardapio item = itemCardapioRepository.findById(idItemCardapio)
-        .orElseThrow(() -> new RuntimeException("Item do cardápio não encontrado"));
-
-    Pedido pedido = new Pedido(null, item, quantidade);
-    req.addPedido(pedido);
-    atualizarTotalRequisicao(req);
-    requisicaoRepository.save(req);
-  }
-
-  private void atualizarTotalRequisicao(Requisicao req) {
-    double total = req.getPedidos().stream()
-        .mapToDouble(p -> p.getItem().getPreco() * p.getQuantidade())
-        .sum();
-    total += total * 0.10; // Adiciona a taxa de serviço de 10%
-    req.setTotalConta(total);
-    req.setTotalPorPessoa(total / req.getQuantidadePessoas());
   }
 }

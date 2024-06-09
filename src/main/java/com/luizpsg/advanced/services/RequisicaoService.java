@@ -67,9 +67,17 @@ public class RequisicaoService {
         .findFirst();
   }
 
+  // public Requisicao criarRequisicao(Cliente cliente, int quantidadePessoas) {
+  // Requisicao requisicao = new Requisicao(null, cliente, quantidadePessoas,
+  // null, false, false, LocalDateTime.now());
+  // return insert(requisicao);
+  // }
+
   public Requisicao criarRequisicao(Cliente cliente, int quantidadePessoas) {
-    Requisicao requisicao = new Requisicao(null, cliente, quantidadePessoas, null, false, false, LocalDateTime.now(),
-        null);
+    Requisicao requisicao = new Requisicao();
+    requisicao.setCliente(cliente);
+    requisicao.setQuantidadePessoas(quantidadePessoas);
+    requisicao.setDataHoraInicio(LocalDateTime.now());
     return insert(requisicao);
   }
 

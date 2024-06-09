@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -46,22 +48,32 @@ public class Requisicao {
 
   private Double totalPorPessoa;
 
+  @JsonIgnore
   @OneToMany(mappedBy = "requisicao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   private List<Pedido> pedidos = new ArrayList<>();
 
   public Requisicao() {
   }
 
-  public Requisicao(Long id, Cliente cliente, int quantidadePessoas, Mesa mesa, boolean isAtendida,
-      boolean isFinalizada, LocalDateTime dataHoraInicio, List<Pedido> pedidos) {
-    this.id = id;
+  public Requisicao(int quantidadePessoas) {
+    this.cliente = new Cliente(null, "Luiz Paulo", "12345678");
+    this.quantidadePessoas = quantidadePessoas;
+    this.mesa = null;
+    this.isAtendida = false;
+    this.isFinalizada = false;
+    this.dataHoraInicio = LocalDateTime.now();
+    this.totalConta = 0.0;
+    this.totalPorPessoa = 0.0;
+  }
+
+  public Requisicao(Cliente cliente, int quantidadePessoas, Mesa mesa, boolean isAtendida,
+      boolean isFinalizada, LocalDateTime dataHoraInicio) {
     this.cliente = cliente;
     this.quantidadePessoas = quantidadePessoas;
     this.mesa = mesa;
     this.isAtendida = isAtendida;
     this.isFinalizada = isFinalizada;
     this.dataHoraInicio = dataHoraInicio;
-    this.pedidos = pedidos;
     this.totalConta = 0.0;
     this.totalPorPessoa = 0.0;
   }

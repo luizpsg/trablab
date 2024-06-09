@@ -1,9 +1,15 @@
 package com.luizpsg.advanced.entities;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -15,6 +21,9 @@ public class ItemCardapio {
   private Long id;
   private String nome;
   private Double preco;
+
+  @OneToMany(mappedBy = "id.item")
+  private Set<PedidoItemCardapio> pedidos = new HashSet<>();
 
   public ItemCardapio() {
   }
@@ -47,6 +56,15 @@ public class ItemCardapio {
 
   public void setPreco(Double preco) {
     this.preco = preco;
+  }
+
+  @JsonIgnore
+  public Set<Pedido> getPedidos() {
+    Set<Pedido> set = new HashSet<>();
+    for (PedidoItemCardapio x : pedidos) {
+      set.add(x.getPedido());
+    }
+    return set;
   }
 
   @Override
