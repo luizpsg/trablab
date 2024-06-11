@@ -9,7 +9,7 @@ import com.advanced.comidinhasveganas.entities.Mesa;
 import com.advanced.comidinhasveganas.services.MesaService;
 
 @Component
-@Order(1)
+@Order(2)
 public class InitializeMesasRunner implements CommandLineRunner {
 
   @Autowired
@@ -24,7 +24,7 @@ public class InitializeMesasRunner implements CommandLineRunner {
   private void inicializarMesas() {
     int[] lugaresPorMesa = { 4, 4, 4, 4, 6, 6, 6, 6, 8, 8 };
     for (int lugares : lugaresPorMesa) {
-      Mesa mesa = new Mesa(null, lugares, false);
+      Mesa mesa = new Mesa(lugares);
       mesaService.insert(mesa);
     }
   }

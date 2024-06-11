@@ -11,7 +11,7 @@ import com.advanced.comidinhasveganas.entities.Cliente;
 import com.advanced.comidinhasveganas.services.ClienteService;
 
 @Component
-@Order(3) // Definindo a ordem de execução
+@Order(1) // Definindo a ordem de execução
 public class InitializeClientesRunner implements CommandLineRunner {
 
   private static final Logger logger = LoggerFactory.getLogger(InitializeClientesRunner.class);
@@ -28,17 +28,17 @@ public class InitializeClientesRunner implements CommandLineRunner {
 
   private void inicializarClientes() {
     Cliente[] clientes = {
-        new Cliente(null, "Victor", "1"),
-        new Cliente(null, "Marcos Rocha", "2"),
-        new Cliente(null, "Leonardo Silva", "3"),
-        new Cliente(null, "Réver", "4"),
-        new Cliente(null, "Junior César", "6"),
-        new Cliente(null, "Pierre", "5"),
-        new Cliente(null, "Leandro Donizete", "8"),
-        new Cliente(null, "Ronaldinho", "10"),
-        new Cliente(null, "Diego Tardelli", "9"),
-        new Cliente(null, "Bernard", "11"),
-        new Cliente(null, "Jô", "7")
+        new Cliente("Victor", "1"),
+        new Cliente("Marcos Rocha", "2"),
+        new Cliente("Leonardo Silva", "3"),
+        new Cliente("Réver", "4"),
+        new Cliente("Junior César", "6"),
+        new Cliente("Pierre", "5"),
+        new Cliente("Leandro Donizete", "8"),
+        new Cliente("Ronaldinho", "10"),
+        new Cliente("Diego Tardelli", "9"),
+        new Cliente("Bernard", "11"),
+        new Cliente("Jô", "7")
     };
     for (Cliente cliente : clientes) {
       clienteService.insert(cliente);
