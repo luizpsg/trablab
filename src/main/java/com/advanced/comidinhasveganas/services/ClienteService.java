@@ -59,6 +59,9 @@ public class ClienteService {
     if (cliente.getTelefone() != null) {
       entity.setTelefone(cliente.getTelefone());
     }
+    if (cliente.getRestaurante() != null) {
+      entity.setRestaurante(cliente.getRestaurante());
+    }
   }
 
 }

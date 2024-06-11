@@ -72,7 +72,8 @@ public class Mesa {
 
   @Override
   public String toString() {
-    return "Mesa [id=" + id + ", lugares=" + lugares + ", isOcupada=" + isOcupada + "]";
+    return "Mesa [id=" + id + ", lugares=" + lugares + ", isOcupada=" + isOcupada + ", restaurante=" + restaurante
+        + "]";
   }
 
 }

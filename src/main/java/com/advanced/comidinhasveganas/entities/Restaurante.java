@@ -68,6 +68,14 @@ public class Restaurante {
     this.endereco = endereco;
   }
 
+  public List<Cliente> setClientes(List<Cliente> clientes) {
+    return this.clientes = clientes;
+  }
+
+  public List<Mesa> setMesas(List<Mesa> mesas) {
+    return this.mesas = mesas;
+  }
+
   public void addMesa(Mesa mesa) {
     mesas.add(mesa);
   }
@@ -86,7 +94,7 @@ public class Restaurante {
 
   @Override
   public String toString() {
-    return "Restaurante [id=" + id + ", nome=" + nome + ", endereco=" + endereco + ", mesas=" + mesas + "]";
+    return "Restaurante [id=" + id + ", nome=" + nome + ", endereco=" + endereco + "]";
   }
 
 }

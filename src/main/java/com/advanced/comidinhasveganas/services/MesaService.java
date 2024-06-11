@@ -55,6 +55,9 @@ public class MesaService {
     if (mesa.getIsOcupada() != null) {
       entity.setIsOcupada(mesa.getIsOcupada());
     }
+    if (mesa.getRestaurante() != null) {
+      entity.setRestaurante(mesa.getRestaurante());
+    }
   }
 
 }
