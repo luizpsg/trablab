@@ -2,6 +2,7 @@ package com.advanced.comidinhasveganas.runners;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -34,24 +35,39 @@ public class InitializeConfigRunner implements CommandLineRunner {
     Restaurante restaurante = new Restaurante("Comidinhas Veganas", "Rua das Flores, 123");
 
     List<Cliente> clientes = clienteService.findAll();
+    List<Mesa> mesas = new ArrayList<>();
 
-    // clientes.add(new Cliente("João", "11999998888"));
+    clientes.add(new Cliente("João", "11999998888"));
     // clientes.add(new Cliente("Maria", "11999997777"));
     // clientes.add(new Cliente("José", "11999996666"));
 
-    List<Mesa> mesas = new ArrayList<>();
+    mesas.add(new Mesa(4));
+    mesas.add(new Mesa(6));
+    mesas.add(new Mesa(8));
 
-    mesas.add(new Mesa(4));
-    mesas.add(new Mesa(4));
-    mesas.add(new Mesa(4));
-
-    restaurante.setClientes(clientes);
+    // restaurante.setClientes(clientes);
     restaurante.setMesas(mesas);
+    clientes.stream().forEach(c -> {
+      c.setRestaurante(restaurante);
+      restaurante.addCliente(c);
+    });
+    mesas.stream().forEach(m -> m.setRestaurante(restaurante));
 
     restauranteService.insert(restaurante);
-    clientes.stream().forEach(c -> c.setRestaurante(restaurante));
-    clientes.stream().forEach(c -> clienteService.update(c.getId(), c));
-    clientes.stream().forEach(System.out::println);
+
+    clientes.stream().forEach(c -> Optional.ofNullable(c.getId()).ifPresentOrElse(
+        id -> clienteService.update(id, c),
+        () -> clienteService.insert(c)));
+
+    mesas.stream().forEach(m -> {
+      if (m.getId() != null) {
+        mesaService.update(m.getId(), m);
+      } else {
+        mesaService.insert(m);
+      }
+    });
+    // clientes.stream().forEach(System.out::println);
+    restaurante.getClientes().stream().forEach(System.out::println);
 
   }
 
