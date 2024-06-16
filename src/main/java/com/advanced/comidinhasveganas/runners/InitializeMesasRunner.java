@@ -9,7 +9,7 @@
 // import com.advanced.comidinhasveganas.services.MesaService;
 
 // @Component
-// @Order(2)
+// @Order(3)
 // public class InitializeMesasRunner implements CommandLineRunner {
 
 // @Autowired

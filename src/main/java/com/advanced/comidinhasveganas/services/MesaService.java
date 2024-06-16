@@ -25,6 +25,10 @@ public class MesaService {
     return mesaRepository.findById(id);
   }
 
+  public List<Mesa> findByRestauranteId(Long id) {
+    return mesaRepository.findByRestauranteId(id);
+  }
+
   @Transactional
   public Mesa insert(Mesa mesa) {
     return mesaRepository.save(mesa);

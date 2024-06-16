@@ -34,6 +34,11 @@ public class Mesa {
     setLugares(lugares);
   }
 
+  public Mesa(Integer lugares, Restaurante restaurante) {
+    setLugares(lugares);
+    setRestaurante(restaurante);
+  }
+
   public Long getId() {
     return id;
   }

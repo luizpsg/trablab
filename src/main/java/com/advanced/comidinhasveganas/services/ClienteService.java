@@ -25,6 +25,10 @@ public class ClienteService {
     return clienteRepository.findById(id);
   }
 
+  public List<Cliente> findByRestauranteId(Long id) {
+    return clienteRepository.findByRestauranteId(id);
+  }
+
   public Optional<Cliente> findByTelefone(String telefone) {
     return clienteRepository.findByTelefone(telefone);
   }

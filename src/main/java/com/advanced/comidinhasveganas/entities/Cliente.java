@@ -35,6 +35,12 @@ public class Cliente {
     setTelefone(telefone);
   }
 
+  public Cliente(String nome, String telefone, Restaurante restaurante) {
+    setNome(nome);
+    setTelefone(telefone);
+    setRestaurante(restaurante);
+  }
+
   public Long getId() {
     return id;
   }

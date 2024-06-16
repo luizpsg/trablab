@@ -1,5 +1,6 @@
 package com.advanced.comidinhasveganas.entities;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,10 @@ public class Restaurante {
   @JsonManagedReference
   private List<Cliente> clientes = new ArrayList<>();
 
+  @OneToMany(mappedBy = "restaurante")
+  @JsonManagedReference
+  private List<Requisicao> requisicoes = new ArrayList<>();
+
   public Restaurante() {
   }
 
@@ -60,6 +65,10 @@ public class Restaurante {
     return clientes;
   }
 
+  public List<Requisicao> getRequisicoes() {
+    return requisicoes;
+  }
+
   public void setNome(String nome) {
     this.nome = nome;
   }
@@ -76,6 +85,10 @@ public class Restaurante {
     return this.mesas = mesas;
   }
 
+  public List<Requisicao> setRequisicoes(List<Requisicao> requisicoes) {
+    return this.requisicoes = requisicoes;
+  }
+
   public void addMesa(Mesa mesa) {
     mesas.add(mesa);
   }
@@ -84,12 +97,38 @@ public class Restaurante {
     mesas.remove(mesa);
   }
 
+  public Cliente getClienteByTelefone(String telefone) {
+    return clientes.stream().filter(c -> c.getTelefone().equals(telefone)).findFirst().orElse(null);
+  }
+
   public void addCliente(Cliente cliente) {
     clientes.add(cliente);
   }
 
   public void removeCliente(Cliente cliente) {
     clientes.remove(cliente);
+  }
+
+  public void addRequisicao(Requisicao requisicao) {
+    requisicoes.add(requisicao);
+  }
+
+  public void removeRequisicao(Requisicao requisicao) {
+    requisicoes.remove(requisicao);
+  }
+
+  public void atualizarRequisicoes() {
+    requisicoes.stream().filter(r -> !r.getIsAtendida()).forEach(
+        req -> {
+          mesas.stream().filter(m -> !m.getIsOcupada() && m.getLugares() >= req.getQuantidadePessoas()).findFirst()
+              .ifPresent(
+                  mesa -> {
+                    req.setMesa(mesa);
+                    req.setIsAtendida(true);
+                    req.setDataHoraInicio(LocalDateTime.now());
+                    mesa.ocupar();
+                  });
+        });
   }
 
   @Override

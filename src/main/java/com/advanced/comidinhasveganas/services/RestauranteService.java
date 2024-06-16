@@ -55,6 +55,15 @@ public class RestauranteService {
     if (restaurante.getEndereco() != null) {
       entity.setEndereco(restaurante.getEndereco());
     }
+    if (restaurante.getMesas() != null) {
+      entity.setMesas(restaurante.getMesas());
+    }
+    if (restaurante.getClientes() != null) {
+      entity.setClientes(restaurante.getClientes());
+    }
+    if (restaurante.getRequisicoes() != null) {
+      entity.setRequisicoes(restaurante.getRequisicoes());
+    }
   }
 
 }
