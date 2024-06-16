@@ -7,10 +7,16 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import com.advanced.comidinhasveganas.entities.Cardapio;
 import com.advanced.comidinhasveganas.entities.Cliente;
+import com.advanced.comidinhasveganas.entities.ItemCardapio;
+import com.advanced.comidinhasveganas.entities.MenuFechado;
 import com.advanced.comidinhasveganas.entities.Mesa;
 import com.advanced.comidinhasveganas.entities.Restaurante;
+import com.advanced.comidinhasveganas.entities.enums.TipoItem;
+import com.advanced.comidinhasveganas.services.CardapioService;
 import com.advanced.comidinhasveganas.services.ClienteService;
+import com.advanced.comidinhasveganas.services.ItemCardapioService;
 import com.advanced.comidinhasveganas.services.MesaService;
 import com.advanced.comidinhasveganas.services.RestauranteService;
 
@@ -28,6 +34,12 @@ public class InitializeComidinhasVeganasRunner implements CommandLineRunner {
 
   @Autowired
   private MesaService mesaService;
+
+  @Autowired
+  private CardapioService cardapioService;
+
+  @Autowired
+  private ItemCardapioService itemCardapioService;
 
   @Override
   public void run(String... args) throws Exception {
@@ -61,6 +73,31 @@ public class InitializeComidinhasVeganasRunner implements CommandLineRunner {
         new Mesa(8, restaurante2)
     };
 
+    Cardapio cardapio = new Cardapio("Principal", restaurante);
+    MenuFechado menuFechado = new MenuFechado("Menu Fechado", restaurante, 32.0);
+
+    ItemCardapio[] itens = {
+        new ItemCardapio("Moqueca de Palmito", 32.0, TipoItem.COMIDA, cardapio),
+        new ItemCardapio("Falafel Assado", 20.0, TipoItem.COMIDA, cardapio),
+        new ItemCardapio("Salada Primavera com Macarrão Konjac", 25.0, TipoItem.COMIDA, cardapio),
+        new ItemCardapio("Escondidinho de Inhame", 18.0, TipoItem.COMIDA, cardapio),
+        new ItemCardapio("Strogonoff de Cogumelos", 35.0, TipoItem.COMIDA, cardapio),
+        new ItemCardapio("Caçarola de legumes", 22.0, TipoItem.COMIDA, cardapio),
+        new ItemCardapio("Água", 3.0, TipoItem.BEBIDA, cardapio),
+        new ItemCardapio("Copo de Suco", 7.0, TipoItem.BEBIDA, cardapio),
+        new ItemCardapio("Refrigerante Orgânico", 7.0, TipoItem.BEBIDA, cardapio),
+        new ItemCardapio("Cerveja Vegana", 9.0, TipoItem.BEBIDA, cardapio),
+        new ItemCardapio("Taça de Vinho Vegano", 18.0, TipoItem.BEBIDA, cardapio),
+        new ItemCardapio("Falafel Assado", 0.0, TipoItem.COMIDA, menuFechado),
+        new ItemCardapio("Caçarola de legumes", 0.0, TipoItem.COMIDA, menuFechado),
+        new ItemCardapio("Copo de Suco", 0.0, TipoItem.BEBIDA, menuFechado),
+        new ItemCardapio("Refrigerante Orgânico", 0.0, TipoItem.BEBIDA, menuFechado),
+        new ItemCardapio("Cerveja Vegana", 0.0, TipoItem.BEBIDA, menuFechado)
+    };
+
+    restaurante.addCardapio(cardapio);
+    restaurante.addCardapio(menuFechado);
+
     restauranteService.insert(restaurante);
     restauranteService.insert(restaurante2);
 
@@ -71,6 +108,15 @@ public class InitializeComidinhasVeganasRunner implements CommandLineRunner {
     for (Mesa mesa : mesas) {
       mesaService.insert(mesa);
     }
+
+    cardapioService.insert(cardapio);
+    cardapioService.insert(menuFechado);
+
+    for (ItemCardapio item : itens) {
+      itemCardapioService.insert(item);
+    }
+
+    logger.info("Restaurante Comidinhas Veganas inicializado com sucesso");
 
   };
 }

@@ -21,7 +21,7 @@ import jakarta.persistence.Table;
 @Table(name = "tb_cardapios")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo_cardapio")
-public abstract class Cardapio {
+public class Cardapio {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,6 +83,6 @@ public abstract class Cardapio {
 
   @Override
   public String toString() {
-    return "Cardapio [id=" + id + ", nome=" + nome + ", restaurante=" + restaurante + "]";
+    return "Cardapio [id=" + id + ", nome=" + nome + "]";
   }
 }
