@@ -72,6 +72,10 @@ public class InitializeConfigRunner implements CommandLineRunner {
 
     restaurante.atualizarRequisicoes();
 
+    restaurante.finalizarRequisicao(req2);
+
+    restaurante.getRequisicoes().stream().forEach(r -> System.out.println(r));
+
     clientes.stream().forEach(c -> Optional.ofNullable(c.getId()).ifPresentOrElse(
         id -> clienteService.update(id, c),
         () -> clienteService.insert(c)));

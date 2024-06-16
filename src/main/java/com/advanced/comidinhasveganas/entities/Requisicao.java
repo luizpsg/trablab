@@ -146,14 +146,15 @@ public class Requisicao {
   // totalPorPessoa = totalConta / quantidadePessoas;
   // }
 
-  public void iniciarRequisicao() {
-    dataHoraInicio = LocalDateTime.now();
-    isAtendida = true;
+  public void iniciarRequisicao(Mesa mesa) {
+    this.mesa = mesa;
+    this.dataHoraInicio = LocalDateTime.now();
+    this.isAtendida = true;
   }
 
   public void finalizarRequisicao() {
-    dataHoraFim = LocalDateTime.now();
-    isFinalizada = true;
+    this.dataHoraFim = LocalDateTime.now();
+    this.isFinalizada = true;
   }
 
   public void cancelarRequisicao() {

@@ -1,6 +1,5 @@
 package com.advanced.comidinhasveganas.entities;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,18 +116,35 @@ public class Restaurante {
     requisicoes.remove(requisicao);
   }
 
+  public List<Requisicao> getRequisicoesNaoAtendidas() {
+    return requisicoes.stream().filter(r -> !r.getIsAtendida()).toList();
+  }
+
+  public List<Requisicao> getRequisicoesNaoFinalizadas() {
+    return requisicoes.stream().filter(r -> !r.getIsFinalizada()).toList();
+  }
+
+  public List<Mesa> getMesasDisponiveis() {
+    return mesas.stream().filter(m -> !m.getIsOcupada()).toList();
+  }
+
+  public List<Mesa> getMesasOcupadas() {
+    return mesas.stream().filter(m -> m.getIsOcupada()).toList();
+  }
+
   public void atualizarRequisicoes() {
-    requisicoes.stream().filter(r -> !r.getIsAtendida()).forEach(
-        req -> {
-          mesas.stream().filter(m -> !m.getIsOcupada() && m.getLugares() >= req.getQuantidadePessoas()).findFirst()
-              .ifPresent(
-                  mesa -> {
-                    req.setMesa(mesa);
-                    req.setIsAtendida(true);
-                    req.setDataHoraInicio(LocalDateTime.now());
-                    mesa.ocupar();
-                  });
-        });
+    getRequisicoesNaoAtendidas().forEach(req -> {
+      getMesasDisponiveis().stream().filter(m -> m.getLugares() >= req.getQuantidadePessoas()).findFirst()
+          .ifPresent(mesa -> {
+            req.iniciarRequisicao(mesa);
+            mesa.ocupar();
+          });
+    });
+  }
+
+  public void finalizarRequisicao(Requisicao requisicao) {
+    requisicao.finalizarRequisicao();
+    requisicao.getMesa().desocupar();
   }
 
   @Override
