@@ -144,6 +144,14 @@ public class Requisicao {
     this.restaurante = restaurante;
   }
 
+  public Pedido getPedido() {
+    return pedido;
+  }
+
+  public void setPedido(Pedido pedido) {
+    this.pedido = pedido;
+  }
+
   // public void calcularTotalConta() {
   // totalConta = mesa.getPreco() * quantidadePessoas;
   // }
@@ -156,12 +164,13 @@ public class Requisicao {
     this.mesa = mesa;
     this.dataHoraInicio = LocalDateTime.now();
     this.isAtendida = true;
-    this.pedido = new Pedido(this);
   }
 
   public void finalizarRequisicao() {
     this.dataHoraFim = LocalDateTime.now();
     this.isFinalizada = true;
+    this.totalConta = pedido.getTotal();
+    this.totalPorPessoa = totalConta / quantidadePessoas;
   }
 
   public void cancelarRequisicao() {

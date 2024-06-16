@@ -24,6 +24,10 @@ public class ItemPedidoService {
     return itemPedidoRepository.findById(id);
   }
 
+  public List<ItemPedido> findByPedidoRequisicaoRestauranteId(Long restauranteId) {
+    return itemPedidoRepository.findByPedidoRequisicaoRestauranteId(restauranteId);
+  }
+
   @Transactional
   public ItemPedido insert(ItemPedido itemPedido) {
     return itemPedidoRepository.save(itemPedido);

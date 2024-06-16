@@ -38,6 +38,12 @@ public class ItemPedido {
     this.quantidade = quantidade;
   }
 
+  public ItemPedido(ItemCardapio itemCardapio, Integer quantidade, Pedido pedido) {
+    this.itemCardapio = itemCardapio;
+    this.quantidade = quantidade;
+    this.pedido = pedido;
+  }
+
   public Long getId() {
     return id;
   }
@@ -56,6 +62,14 @@ public class ItemPedido {
 
   public Double getSubTotal() {
     return itemCardapio.getPreco() * quantidade;
+  }
+
+  public Pedido getPedido() {
+    return pedido;
+  }
+
+  public void setPedido(Pedido pedido) {
+    this.pedido = pedido;
   }
 
   @Override

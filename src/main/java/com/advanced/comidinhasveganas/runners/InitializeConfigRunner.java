@@ -1,7 +1,9 @@
 package com.advanced.comidinhasveganas.runners;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -11,13 +13,18 @@ import org.springframework.stereotype.Component;
 import com.advanced.comidinhasveganas.entities.Cardapio;
 import com.advanced.comidinhasveganas.entities.Cliente;
 import com.advanced.comidinhasveganas.entities.ItemCardapio;
+import com.advanced.comidinhasveganas.entities.ItemPedido;
 import com.advanced.comidinhasveganas.entities.Mesa;
+import com.advanced.comidinhasveganas.entities.Pedido;
 import com.advanced.comidinhasveganas.entities.Requisicao;
 import com.advanced.comidinhasveganas.entities.Restaurante;
+import com.advanced.comidinhasveganas.exceptions.ResourceNotFoundException;
 import com.advanced.comidinhasveganas.services.CardapioService;
 import com.advanced.comidinhasveganas.services.ClienteService;
 import com.advanced.comidinhasveganas.services.ItemCardapioService;
+import com.advanced.comidinhasveganas.services.ItemPedidoService;
 import com.advanced.comidinhasveganas.services.MesaService;
+import com.advanced.comidinhasveganas.services.PedidoService;
 import com.advanced.comidinhasveganas.services.RequisicaoService;
 import com.advanced.comidinhasveganas.services.RestauranteService;
 
@@ -43,10 +50,19 @@ public class InitializeConfigRunner implements CommandLineRunner {
   @Autowired
   private ItemCardapioService itemCardapioService;
 
+  @Autowired
+  private PedidoService pedidoService;
+
+  @Autowired
+  private ItemPedidoService itemPedidoService;
+
   @Override
   public void run(String... args) throws Exception {
 
-    Restaurante restaurante = restauranteService.findAll().get(0);
+    Long restauranteId = 1L;
+
+    Restaurante restaurante = restauranteService.findById(restauranteId)
+        .orElseThrow(() -> new ResourceNotFoundException("Restaurante não encontrado"));
 
     List<Mesa> mesas = mesaService.findByRestauranteId(restaurante.getId());
     restaurante.setMesas(mesas);
@@ -56,12 +72,24 @@ public class InitializeConfigRunner implements CommandLineRunner {
     restaurante.setRequisicoes(requisicoes);
     List<Cardapio> cardapios = cardapioService.findByRestauranteId(restaurante.getId());
     List<ItemCardapio> itensCardapio = itemCardapioService.findByCardapioRestauranteId(restaurante.getId());
-    cardapios.stream().forEach(c -> {
-      List<ItemCardapio> itens = itensCardapio.stream().filter(i -> i.getCardapio().getId().equals(c.getId())).toList();
+    List<Pedido> pedidos = pedidoService.findByRequisicaoRestauranteId(restaurante.getId());
+    List<ItemPedido> itensPedido = itemPedidoService.findByPedidoRequisicaoRestauranteId(restaurante.getId());
+
+    cardapios.forEach(c -> {
+      List<ItemCardapio> itens = itensCardapio.stream()
+          .filter(i -> i.getCardapio().getId().equals(c.getId()))
+          .collect(Collectors.toList());
       c.setItens(itens);
     });
 
     restaurante.setCardapios(cardapios);
+
+    pedidos.forEach(p -> {
+      List<ItemPedido> itens = itensPedido.stream()
+          .filter(i -> i.getPedido().getId().equals(p.getId()))
+          .collect(Collectors.toList());
+      p.setItens(itens);
+    });
 
     System.out.println("-------------------");
     System.out.println(restaurante);
@@ -76,13 +104,65 @@ public class InitializeConfigRunner implements CommandLineRunner {
     System.out.println("-------------------");
     cardapios.stream().forEach(c -> c.getItens().stream().forEach(i -> System.out.println(i)));
 
-    Requisicao req = new Requisicao(clientes.get(0), 4, restaurante);
+    // Receber um cliente (exemplo de dados)
+    String nomeCliente = "João da Silva";
+    String telefoneCliente = "1";
+
+    Cliente cliente = restaurante.getClienteByTelefone(telefoneCliente);
+    if (cliente == null) {
+      cliente = new Cliente(nomeCliente, telefoneCliente, restaurante);
+      clientes.add(cliente);
+      restaurante.addCliente(cliente);
+    }
+
+    Requisicao req = new Requisicao(cliente, 4, restaurante);
     restaurante.addRequisicao(req);
+    requisicoes.add(req);
     System.out.println(req);
+
+    restaurante.atualizarRequisicoes();
+
+    req.setPedido(new Pedido());
+
+    ItemCardapio itemCardapio = cardapios.get(0).getItens().get(0);
+    ItemPedido itemPedido = new ItemPedido(itemCardapio, 2, req.getPedido());
+    req.getPedido().addItem(itemPedido);
+    itensPedido.add(itemPedido);
+
+    itemCardapio = cardapios.get(0).getItens().get(1);
+    itemPedido = new ItemPedido(itemCardapio, 1, req.getPedido());
+    req.getPedido().addItem(itemPedido);
+    itensPedido.add(itemPedido);
+
+    pedidos.add(req.getPedido());
+
+    clientes.stream().forEach(c -> Optional.ofNullable(c.getId()).ifPresentOrElse(
+        id -> clienteService.update(id, c),
+        () -> clienteService.insert(c)));
+
+    mesas.stream().forEach(m -> Optional.ofNullable(m.getId()).ifPresentOrElse(
+        id -> mesaService.update(id, m),
+        () -> mesaService.insert(m)));
 
     requisicoes.stream().forEach(r -> Optional.ofNullable(r.getId()).ifPresentOrElse(
         id -> requisicaoService.update(id, r),
         () -> requisicaoService.insert(r)));
+
+    pedidos.stream().forEach(p -> Optional.ofNullable(p.getId()).ifPresentOrElse(
+        id -> pedidoService.update(id, p),
+        () -> pedidoService.insert(p)));
+
+    itensPedido.stream().forEach(i -> Optional.ofNullable(i.getId()).ifPresentOrElse(
+        id -> itemPedidoService.update(id, i),
+        () -> itemPedidoService.insert(i)));
+
+    cardapios.stream().forEach(c -> Optional.ofNullable(c.getId()).ifPresentOrElse(
+        id -> cardapioService.update(id, c),
+        () -> cardapioService.insert(c)));
+
+    itensCardapio.stream().forEach(i -> Optional.ofNullable(i.getId()).ifPresentOrElse(
+        id -> itemCardapioService.update(id, i),
+        () -> itemCardapioService.insert(i)));
 
     restauranteService.update(restaurante.getId(), restaurante);
 

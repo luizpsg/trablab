@@ -62,6 +62,14 @@ public class Pedido {
     this.requisicao = requisicao;
   }
 
+  public void addItem(ItemPedido item) {
+    itens.add(item);
+  }
+
+  public void removeItem(ItemPedido item) {
+    itens.remove(item);
+  }
+
   public Double getTotal() {
     return itens.stream().mapToDouble(ItemPedido::getSubTotal).sum();
   }

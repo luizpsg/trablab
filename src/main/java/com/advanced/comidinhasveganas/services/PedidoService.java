@@ -24,6 +24,10 @@ public class PedidoService {
     return pedidoRepository.findById(id);
   }
 
+  public List<Pedido> findByRequisicaoRestauranteId(Long restauranteId) {
+    return pedidoRepository.findByRequisicaoRestauranteId(restauranteId);
+  }
+
   @Transactional
   public Pedido insert(Pedido pedido) {
     return pedidoRepository.save(pedido);
