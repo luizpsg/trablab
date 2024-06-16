@@ -36,6 +36,10 @@ public class Restaurante {
   @JsonManagedReference
   private List<Requisicao> requisicoes = new ArrayList<>();
 
+  @OneToMany(mappedBy = "restaurante")
+  @JsonManagedReference
+  private List<Cardapio> cardapios = new ArrayList<>();
+
   public Restaurante() {
   }
 
@@ -88,6 +92,14 @@ public class Restaurante {
     return this.requisicoes = requisicoes;
   }
 
+  public List<Cardapio> getCardapios() {
+    return cardapios;
+  }
+
+  public void setCardapios(List<Cardapio> cardapios) {
+    this.cardapios = cardapios;
+  }
+
   public void addMesa(Mesa mesa) {
     mesas.add(mesa);
   }
@@ -114,6 +126,14 @@ public class Restaurante {
 
   public void removeRequisicao(Requisicao requisicao) {
     requisicoes.remove(requisicao);
+  }
+
+  public void addCardapio(Cardapio cardapio) {
+    cardapios.add(cardapio);
+  }
+
+  public void removeCardapio(Cardapio cardapio) {
+    cardapios.remove(cardapio);
   }
 
   public List<Requisicao> getRequisicoesNaoAtendidas() {
