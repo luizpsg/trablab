@@ -28,6 +28,10 @@ public class ItemCardapioService {
     return itemCardapioRepository.findByCardapioId(id);
   }
 
+  public List<ItemCardapio> findByCardapioRestauranteId(Long id) {
+    return itemCardapioRepository.findByCardapioRestauranteId(id);
+  }
+
   @Transactional
   public ItemCardapio insert(ItemCardapio itemCardapio) {
     return itemCardapioRepository.save(itemCardapio);

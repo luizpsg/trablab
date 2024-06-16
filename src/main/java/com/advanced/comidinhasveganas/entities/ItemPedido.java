@@ -1,0 +1,65 @@
+package com.advanced.comidinhasveganas.entities;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "tb_itens_pedidos")
+public class ItemPedido {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @ManyToOne
+  @JoinColumn(name = "item_cardapio_id")
+  @JsonBackReference
+  private ItemCardapio itemCardapio;
+
+  private Integer quantidade;
+
+  @ManyToOne
+  @JoinColumn(name = "pedido_id")
+  @JsonBackReference
+  private Pedido pedido;
+
+  public ItemPedido() {
+  }
+
+  public ItemPedido(ItemCardapio itemCardapio, Integer quantidade) {
+    this.itemCardapio = itemCardapio;
+    this.quantidade = quantidade;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public ItemCardapio getItemCardapio() {
+    return itemCardapio;
+  }
+
+  public Integer getQuantidade() {
+    return quantidade;
+  }
+
+  public void setQuantidade(Integer quantidade) {
+    this.quantidade = quantidade;
+  }
+
+  public Double getSubTotal() {
+    return itemCardapio.getPreco() * quantidade;
+  }
+
+  @Override
+  public String toString() {
+    return "ItemPedido [id=" + id + ", itemCardapio=" + itemCardapio + ", quantidade=" + quantidade + "]";
+  }
+}

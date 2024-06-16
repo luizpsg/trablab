@@ -9,4 +9,6 @@ import com.advanced.comidinhasveganas.entities.ItemCardapio;
 public interface ItemCardapioRepository extends JpaRepository<ItemCardapio, Long> {
 
   List<ItemCardapio> findByCardapioId(Long id);
+
+  List<ItemCardapio> findByCardapioRestauranteId(Long id);
 }

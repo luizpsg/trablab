@@ -1,6 +1,7 @@
 package com.advanced.comidinhasveganas.runners;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -54,10 +55,12 @@ public class InitializeConfigRunner implements CommandLineRunner {
     List<Requisicao> requisicoes = requisicaoService.findByRestauranteId(restaurante.getId());
     restaurante.setRequisicoes(requisicoes);
     List<Cardapio> cardapios = cardapioService.findByRestauranteId(restaurante.getId());
+    List<ItemCardapio> itensCardapio = itemCardapioService.findByCardapioRestauranteId(restaurante.getId());
     cardapios.stream().forEach(c -> {
-      List<ItemCardapio> itens = itemCardapioService.findByCardapioId(c.getId());
+      List<ItemCardapio> itens = itensCardapio.stream().filter(i -> i.getCardapio().getId().equals(c.getId())).toList();
       c.setItens(itens);
     });
+
     restaurante.setCardapios(cardapios);
 
     System.out.println("-------------------");
@@ -71,15 +74,17 @@ public class InitializeConfigRunner implements CommandLineRunner {
     System.out.println("-------------------");
     restaurante.getCardapios().stream().forEach(c -> System.out.println(c));
     System.out.println("-------------------");
-    cardapios.get(0).getItens().stream().forEach(i -> System.out.println(i));
+    cardapios.stream().forEach(c -> c.getItens().stream().forEach(i -> System.out.println(i)));
 
-    // List<Mesa> mesas = mesaService.findByRestauranteId(restaurante.getId());
-    // List<Cliente> clientes =
-    // clienteService.findByRestauranteId(restaurante.getId());
-    // List<Requisicao> requisicoes =
-    // requisicaoService.findByRestauranteId(restaurante.getId());
-    // List<Cardapio> cardapios =
-    // cardapioService.findByRestauranteId(restaurante.getId());
+    Requisicao req = new Requisicao(clientes.get(0), 4, restaurante);
+    restaurante.addRequisicao(req);
+    System.out.println(req);
+
+    requisicoes.stream().forEach(r -> Optional.ofNullable(r.getId()).ifPresentOrElse(
+        id -> requisicaoService.update(id, r),
+        () -> requisicaoService.insert(r)));
+
+    restauranteService.update(restaurante.getId(), restaurante);
 
     // restaurante.setMesas(mesas);
     // restaurante.setClientes(clientes);
