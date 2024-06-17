@@ -59,6 +59,12 @@ public class ItemPedidoService {
     if (itemPedido.getQuantidade() != null) {
       entity.setQuantidade(itemPedido.getQuantidade());
     }
+    if (itemPedido.getPedido() != null) {
+      entity.setPedido(itemPedido.getPedido());
+    }
+    if (itemPedido.getItemCardapio() != null) {
+      entity.setItemCardapio(itemPedido.getItemCardapio());
+    }
   }
 
 }

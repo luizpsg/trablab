@@ -1,13 +1,14 @@
 package com.advanced.comidinhasveganas.entities;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.advanced.comidinhasveganas.entities.enums.TipoItem;
 
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
 @Entity
+@DiscriminatorValue("MENU_FECHADO")
 public class MenuFechado extends Cardapio {
 
   private Double precoFixo;
@@ -29,23 +30,15 @@ public class MenuFechado extends Cardapio {
   }
 
   public List<ItemCardapio> getPratos() {
-    List<ItemCardapio> pratos = new ArrayList<>();
-    for (ItemCardapio item : getItens()) {
-      if (item.getTipo() == TipoItem.COMIDA) {
-        pratos.add(item);
-      }
-    }
-    return pratos;
+    return getItens().stream()
+        .filter(item -> item.getTipo() == TipoItem.COMIDA)
+        .toList();
   }
 
   public List<ItemCardapio> getBebidas() {
-    List<ItemCardapio> bebidas = new ArrayList<>();
-    for (ItemCardapio item : getItens()) {
-      if (item.getTipo() == TipoItem.BEBIDA) {
-        bebidas.add(item);
-      }
-    }
-    return bebidas;
+    return getItens().stream()
+        .filter(item -> item.getTipo() == TipoItem.BEBIDA)
+        .toList();
   }
 
   @Override

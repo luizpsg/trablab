@@ -54,6 +54,12 @@ public class CardapioService {
     if (cardapio.getNome() != null) {
       entity.setNome(cardapio.getNome());
     }
+    if (cardapio.getRestaurante() != null) {
+      entity.setRestaurante(cardapio.getRestaurante());
+    }
+    if (cardapio.getItens() != null) {
+      entity.setItens(cardapio.getItens());
+    }
   }
 
 }

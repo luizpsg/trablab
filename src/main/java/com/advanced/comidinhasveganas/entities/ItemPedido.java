@@ -52,6 +52,10 @@ public class ItemPedido {
     return itemCardapio;
   }
 
+  public void setItemCardapio(ItemCardapio itemCardapio) {
+    this.itemCardapio = itemCardapio;
+  }
+
   public Integer getQuantidade() {
     return quantidade;
   }

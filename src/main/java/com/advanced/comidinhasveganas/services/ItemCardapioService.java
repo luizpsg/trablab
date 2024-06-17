@@ -58,6 +58,12 @@ public class ItemCardapioService {
     if (itemCardapio.getNome() != null) {
       entity.setNome(itemCardapio.getNome());
     }
+    if (itemCardapio.getPreco() != null) {
+      entity.setPreco(itemCardapio.getPreco());
+    }
+    if (itemCardapio.getCardapio() != null) {
+      entity.setCardapio(itemCardapio.getCardapio());
+    }
   }
 
 }

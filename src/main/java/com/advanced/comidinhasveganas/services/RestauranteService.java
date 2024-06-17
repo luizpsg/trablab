@@ -64,6 +64,9 @@ public class RestauranteService {
     if (restaurante.getRequisicoes() != null) {
       entity.setRequisicoes(restaurante.getRequisicoes());
     }
+    if (restaurante.getCardapios() != null) {
+      entity.setCardapios(restaurante.getCardapios());
+    }
   }
 
 }
