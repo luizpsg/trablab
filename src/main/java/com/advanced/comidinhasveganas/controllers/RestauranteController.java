@@ -118,13 +118,16 @@ public class RestauranteController {
 
   @PostMapping("/{idRestaurante}/clientes/{idCliente}/requisicoes")
   public ResponseEntity<Requisicao> insertRequisicao(@PathVariable Long idRestaurante, @PathVariable Long idCliente,
-      @RequestBody Requisicao requisicao) {
+      @RequestBody Integer numPessoas) {
+
     Restaurante restaurante = restauranteService.findById(idRestaurante)
         .orElseThrow(() -> new RuntimeException("Restaurante não encontrado"));
     Cliente cliente = clienteService.findById(idCliente)
         .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
-    requisicao.setRestaurante(restaurante);
-    requisicao.setCliente(cliente);
+    Requisicao requisicao = new Requisicao(cliente, numPessoas, restaurante);
+    restaurante.addRequisicao(requisicao);
+    // requisicao.setRestaurante(restaurante);
+    // requisicao.setCliente(cliente);
     return ResponseEntity.status(HttpStatus.CREATED).body(requisicaoService.insert(requisicao));
   }
 

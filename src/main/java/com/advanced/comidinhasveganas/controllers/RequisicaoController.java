@@ -51,6 +51,11 @@ public class RequisicaoController {
     return ResponseEntity.ok(requisicaoService.update(id, requisicao));
   }
 
+  @PutMapping("/alocarMesa/{id}/{numMesa}")
+  public ResponseEntity<Requisicao> alocarMesa(@PathVariable Long id, @RequestBody Requisicao requisicao) {
+    return ResponseEntity.ok(requisicaoService.alocarMesa(idReq, numMesa));
+  }
+
   @DeleteMapping
   public ResponseEntity<Void> deleteAll() {
     requisicaoService.deleteAll();

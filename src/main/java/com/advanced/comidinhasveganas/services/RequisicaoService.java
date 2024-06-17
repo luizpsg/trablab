@@ -45,10 +45,14 @@ public class RequisicaoService {
   }
 
   @Transactional
-  public Requisicao update(Long id, Requisicao requisicao) {
+  public Requisicao alocarMesa(Long id, Requisicao requisicao) {
     Requisicao entity = requisicaoRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("Requisição não encontrada"));
-    updateData(entity, requisicao);
+    Mesa mesa = mesaRepository.findById(numMesa)
+        .orElseThrow(() -> new ResourceNotFoundException("Mesa não encontrada"));
+
+    entity.iniciarRequisicao(mesa);
+    // updateData(entity, requisicao);
     return requisicaoRepository.save(entity);
   }
 
