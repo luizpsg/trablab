@@ -43,7 +43,7 @@ public class Requisicao {
 
   private Double totalPorPessoa = 0.0;
 
-  @OneToOne(mappedBy = "requisicao")
+  @OneToOne
   private Pedido pedido;
 
   @ManyToOne
@@ -164,6 +164,7 @@ public class Requisicao {
     this.mesa = mesa;
     this.dataHoraInicio = LocalDateTime.now();
     this.isAtendida = true;
+    setPedido(new Pedido());
   }
 
   public void finalizarRequisicao() {

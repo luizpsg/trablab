@@ -34,6 +34,11 @@ public class ItemPedidoService {
   }
 
   @Transactional
+  public List<ItemPedido> insertAll(List<ItemPedido> itensPedido) {
+    return itemPedidoRepository.saveAll(itensPedido);
+  }
+
+  @Transactional
   public void deleteAll() {
     itemPedidoRepository.deleteAll();
   }

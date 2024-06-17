@@ -27,7 +27,7 @@ public class Pedido {
   private List<ItemPedido> itens = new ArrayList<>();
 
   @JsonIgnore
-  @OneToOne
+  @OneToOne(mappedBy = "pedido")
   private Requisicao requisicao;
 
   public Pedido() {
@@ -64,6 +64,10 @@ public class Pedido {
 
   public void addItem(ItemPedido item) {
     itens.add(item);
+  }
+
+  public void addItens(List<ItemPedido> itens) {
+    this.itens.addAll(itens);
   }
 
   public void removeItem(ItemPedido item) {

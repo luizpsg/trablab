@@ -80,5 +80,11 @@ public class RequisicaoService {
     if (requisicao.getTotalPorPessoa() != null) {
       entity.setTotalPorPessoa(requisicao.getTotalPorPessoa());
     }
+    if (requisicao.getRestaurante() != null) {
+      entity.setRestaurante(requisicao.getRestaurante());
+    }
+    if (requisicao.getPedido() != null) {
+      entity.setPedido(requisicao.getPedido());
+    }
   }
 }
