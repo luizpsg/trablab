@@ -1,6 +1,6 @@
 package com.advanced.comidinhasveganas.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,7 +24,7 @@ public class Mesa {
 
   @ManyToOne
   @JoinColumn(name = "restaurante_id")
-  @JsonBackReference
+  @JsonIgnore
   private Restaurante restaurante;
 
   public Mesa() {

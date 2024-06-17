@@ -33,7 +33,6 @@ public class ClienteController {
   public ResponseEntity<Cliente> findById(@PathVariable Long id) {
     return ResponseEntity.ok()
         .body(clienteService.findById(id).orElseThrow(() -> new RuntimeException("Cliente não encontrado")));
-
   }
 
   @PostMapping
@@ -57,5 +56,4 @@ public class ClienteController {
     return ResponseEntity
         .ok(clienteService.findByTelefone(telefone).orElseThrow(() -> new RuntimeException("Cliente não encontrado")));
   }
-
 }

@@ -3,7 +3,7 @@ package com.advanced.comidinhasveganas.entities;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
@@ -31,7 +31,7 @@ public class Cardapio {
 
   @ManyToOne
   @JoinColumn(name = "restaurante_id")
-  @JsonBackReference
+  @JsonIgnore
   private Restaurante restaurante;
 
   @OneToMany(mappedBy = "cardapio")

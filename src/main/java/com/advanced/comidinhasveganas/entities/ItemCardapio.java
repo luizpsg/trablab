@@ -1,6 +1,7 @@
 package com.advanced.comidinhasveganas.entities;
 
 import com.advanced.comidinhasveganas.entities.enums.TipoItem;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -29,6 +30,7 @@ public class ItemCardapio {
 
   @ManyToOne
   @JoinColumn(name = "cardapio_id")
+  @JsonIgnore
   private Cardapio cardapio;
 
   public ItemCardapio() {

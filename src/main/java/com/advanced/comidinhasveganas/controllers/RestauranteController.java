@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.advanced.comidinhasveganas.entities.Cliente;
 import com.advanced.comidinhasveganas.entities.Restaurante;
+import com.advanced.comidinhasveganas.services.ClienteService;
 import com.advanced.comidinhasveganas.services.RestauranteService;
 
 @RestController
@@ -23,6 +25,9 @@ public class RestauranteController {
 
   @Autowired
   private RestauranteService restauranteService;
+
+  @Autowired
+  private ClienteService clienteService;
 
   @GetMapping
   public ResponseEntity<List<Restaurante>> findAll() {
@@ -38,6 +43,15 @@ public class RestauranteController {
   @PostMapping
   public ResponseEntity<Restaurante> insert(@RequestBody Restaurante restaurante) {
     return ResponseEntity.status(HttpStatus.CREATED).body(restauranteService.insert(restaurante));
+  }
+
+  @PostMapping("/{idRestaurante}/clientes")
+  public ResponseEntity<Cliente> insertCliente(@PathVariable Long idRestaurante,
+      @RequestBody Cliente cliente) {
+    Restaurante restaurante = restauranteService.findById(idRestaurante)
+        .orElseThrow(() -> new RuntimeException("Restaurante não encontrado"));
+    cliente.setRestaurante(restaurante);
+    return ResponseEntity.status(HttpStatus.CREATED).body(clienteService.insert(cliente));
   }
 
   @DeleteMapping("/{id}")

@@ -1,6 +1,6 @@
 package com.advanced.comidinhasveganas.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,14 +20,14 @@ public class ItemPedido {
 
   @ManyToOne
   @JoinColumn(name = "item_cardapio_id")
-  @JsonBackReference
+  @JsonIgnore
   private ItemCardapio itemCardapio;
 
   private Integer quantidade;
 
   @ManyToOne
   @JoinColumn(name = "pedido_id")
-  @JsonBackReference
+  @JsonIgnore
   private Pedido pedido;
 
   public ItemPedido() {

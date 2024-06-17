@@ -1,6 +1,8 @@
 package com.advanced.comidinhasveganas.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +14,9 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_clientes")
-public class Cliente {
+public class Cliente implements Serializable {
+
+  private static final long serialVersionUID = 1L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +28,7 @@ public class Cliente {
 
   @ManyToOne
   @JoinColumn(name = "restaurante_id")
-  @JsonBackReference
+  @JsonIgnore
   private Restaurante restaurante;
 
   public Cliente() {

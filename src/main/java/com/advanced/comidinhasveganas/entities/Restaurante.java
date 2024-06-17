@@ -3,8 +3,6 @@ package com.advanced.comidinhasveganas.entities;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +14,8 @@ import jakarta.persistence.Table;
 @Table(name = "tb_restaurantes")
 public class Restaurante {
 
+  private static final Double TAXA_SERVICO = 1.1;
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -25,19 +25,15 @@ public class Restaurante {
   private String endereco;
 
   @OneToMany(mappedBy = "restaurante")
-  @JsonManagedReference
   private List<Mesa> mesas = new ArrayList<>();
 
   @OneToMany(mappedBy = "restaurante")
-  @JsonManagedReference
   private List<Cliente> clientes = new ArrayList<>();
 
   @OneToMany(mappedBy = "restaurante")
-  @JsonManagedReference
   private List<Requisicao> requisicoes = new ArrayList<>();
 
   @OneToMany(mappedBy = "restaurante")
-  @JsonManagedReference
   private List<Cardapio> cardapios = new ArrayList<>();
 
   public Restaurante() {
@@ -50,6 +46,10 @@ public class Restaurante {
 
   public Long getId() {
     return id;
+  }
+
+  public Double getTaxaServico() {
+    return TAXA_SERVICO;
   }
 
   public String getNome() {
