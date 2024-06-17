@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.advanced.comidinhasveganas.entities.Requisicao;
 import com.advanced.comidinhasveganas.entities.Restaurante;
 import com.advanced.comidinhasveganas.exceptions.ResourceNotFoundException;
 import com.advanced.comidinhasveganas.repositories.RestauranteRepository;

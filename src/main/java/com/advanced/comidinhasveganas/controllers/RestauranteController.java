@@ -14,13 +14,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.advanced.comidinhasveganas.entities.Cardapio;
 import com.advanced.comidinhasveganas.entities.Cliente;
 import com.advanced.comidinhasveganas.entities.Mesa;
 import com.advanced.comidinhasveganas.entities.Requisicao;
 import com.advanced.comidinhasveganas.entities.Restaurante;
+import com.advanced.comidinhasveganas.services.CardapioService;
 import com.advanced.comidinhasveganas.services.ClienteService;
 import com.advanced.comidinhasveganas.services.MesaService;
-import com.advanced.comidinhasveganas.services.PedidoService;
 import com.advanced.comidinhasveganas.services.RequisicaoService;
 import com.advanced.comidinhasveganas.services.RestauranteService;
 
@@ -41,7 +42,7 @@ public class RestauranteController {
   private RequisicaoService requisicaoService;
 
   @Autowired
-  private PedidoService pedidoService;
+  private CardapioService cardapioService;
 
   @GetMapping
   public ResponseEntity<List<Restaurante>> findAll() {
@@ -52,6 +53,45 @@ public class RestauranteController {
   public ResponseEntity<Restaurante> findById(@PathVariable Long id) {
     return ResponseEntity.ok()
         .body(restauranteService.findById(id).orElseThrow(() -> new RuntimeException("Restaurante não encontrado")));
+  }
+
+  @GetMapping("/{idRestaurante}/clientes")
+  public ResponseEntity<List<Cliente>> findClientesByRestauranteId(@PathVariable Long idRestaurante) {
+    return ResponseEntity.ok(clienteService.findByRestauranteId(idRestaurante));
+  }
+
+  @GetMapping("/{idRestaurante}/clientes/{idCliente}")
+  public ResponseEntity<Cliente> findClienteById(@PathVariable Long idRestaurante, @PathVariable Long idCliente) {
+    return ResponseEntity.ok(clienteService.findById(idCliente)
+        .orElseThrow(() -> new RuntimeException("Cliente não encontrado")));
+  }
+
+  @GetMapping("/{idRestaurante}/mesas")
+  public ResponseEntity<List<Mesa>> findMesasByRestauranteId(@PathVariable Long idRestaurante) {
+    return ResponseEntity.ok(mesaService.findByRestauranteId(idRestaurante));
+  }
+
+  @GetMapping("/{idRestaurante}/mesas/{idMesa}")
+  public ResponseEntity<Mesa> findMesaById(@PathVariable Long idRestaurante, @PathVariable Long idMesa) {
+    return ResponseEntity.ok(mesaService.findById(idMesa)
+        .orElseThrow(() -> new RuntimeException("Mesa não encontrada")));
+  }
+
+  @GetMapping("/{idRestaurante}/requisicoes")
+  public ResponseEntity<List<Requisicao>> findRequisicoesByRestauranteId(@PathVariable Long idRestaurante) {
+    return ResponseEntity.ok(requisicaoService.findByRestauranteId(idRestaurante));
+  }
+
+  @GetMapping("/{idRestaurante}/requicoes/{idRequisicao}")
+  public ResponseEntity<Requisicao> findRequisicaoById(@PathVariable Long idRestaurante,
+      @PathVariable Long idRequisicao) {
+    return ResponseEntity.ok(requisicaoService.findById(idRequisicao)
+        .orElseThrow(() -> new RuntimeException("Requisição não encontrada")));
+  }
+
+  @GetMapping("/{idRestaurante}/cardapios")
+  public ResponseEntity<List<Cardapio>> findCardapiosByRestauranteId(@PathVariable Long idRestaurante) {
+    return ResponseEntity.ok(cardapioService.findByRestauranteId(idRestaurante));
   }
 
   @PostMapping

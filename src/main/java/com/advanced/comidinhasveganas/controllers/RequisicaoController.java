@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.advanced.comidinhasveganas.entities.Requisicao;
+import com.advanced.comidinhasveganas.services.ItemPedidoService;
 import com.advanced.comidinhasveganas.services.RequisicaoService;
 
 @RestController
@@ -23,6 +24,9 @@ public class RequisicaoController {
 
   @Autowired
   private RequisicaoService requisicaoService;
+
+  @Autowired
+  private ItemPedidoService itemPedidoService;
 
   @GetMapping
   public ResponseEntity<List<Requisicao>> findAll() {
