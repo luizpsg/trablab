@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.advanced.comidinhasveganas.entities.Pedido;
+import com.advanced.comidinhasveganas.entities.Requisicao;
 import com.advanced.comidinhasveganas.repositories.PedidoRepository;
 
 @Service
@@ -41,6 +42,18 @@ public class PedidoService {
   @Transactional
   public void deleteById(Long id) {
     pedidoRepository.deleteById(id);
+  }
+
+  @Transactional
+  public void processarRequisicoes(List<Requisicao> requisicoes) {
+    requisicoes.forEach(r -> {
+      Pedido p = r.getPedido();
+      if (p != null) {
+        Optional.ofNullable(p.getId()).ifPresentOrElse(
+            id -> update(id, p),
+            () -> insert(p));
+      }
+    });
   }
 
   @Transactional

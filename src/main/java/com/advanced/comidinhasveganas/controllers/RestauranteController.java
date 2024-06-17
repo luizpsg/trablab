@@ -15,8 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.advanced.comidinhasveganas.entities.Cliente;
+import com.advanced.comidinhasveganas.entities.Mesa;
+import com.advanced.comidinhasveganas.entities.Requisicao;
 import com.advanced.comidinhasveganas.entities.Restaurante;
 import com.advanced.comidinhasveganas.services.ClienteService;
+import com.advanced.comidinhasveganas.services.MesaService;
+import com.advanced.comidinhasveganas.services.PedidoService;
+import com.advanced.comidinhasveganas.services.RequisicaoService;
 import com.advanced.comidinhasveganas.services.RestauranteService;
 
 @RestController
@@ -28,6 +33,15 @@ public class RestauranteController {
 
   @Autowired
   private ClienteService clienteService;
+
+  @Autowired
+  private MesaService mesaService;
+
+  @Autowired
+  private RequisicaoService requisicaoService;
+
+  @Autowired
+  private PedidoService pedidoService;
 
   @GetMapping
   public ResponseEntity<List<Restaurante>> findAll() {
@@ -45,6 +59,14 @@ public class RestauranteController {
     return ResponseEntity.status(HttpStatus.CREATED).body(restauranteService.insert(restaurante));
   }
 
+  @PostMapping("/{idRestaurante}/mesas")
+  public ResponseEntity<Mesa> insertMesa(@PathVariable Long idRestaurante, @RequestBody Mesa mesa) {
+    Restaurante restaurante = restauranteService.findById(idRestaurante)
+        .orElseThrow(() -> new RuntimeException("Restaurante não encontrado"));
+    mesa.setRestaurante(restaurante);
+    return ResponseEntity.status(HttpStatus.CREATED).body(mesaService.insert(mesa));
+  }
+
   @PostMapping("/{idRestaurante}/clientes")
   public ResponseEntity<Cliente> insertCliente(@PathVariable Long idRestaurante,
       @RequestBody Cliente cliente) {
@@ -52,6 +74,18 @@ public class RestauranteController {
         .orElseThrow(() -> new RuntimeException("Restaurante não encontrado"));
     cliente.setRestaurante(restaurante);
     return ResponseEntity.status(HttpStatus.CREATED).body(clienteService.insert(cliente));
+  }
+
+  @PostMapping("/{idRestaurante}/clientes/{idCliente}/requisicoes")
+  public ResponseEntity<Requisicao> insertRequisicao(@PathVariable Long idRestaurante, @PathVariable Long idCliente,
+      @RequestBody Requisicao requisicao) {
+    Restaurante restaurante = restauranteService.findById(idRestaurante)
+        .orElseThrow(() -> new RuntimeException("Restaurante não encontrado"));
+    Cliente cliente = clienteService.findById(idCliente)
+        .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+    requisicao.setRestaurante(restaurante);
+    requisicao.setCliente(cliente);
+    return ResponseEntity.status(HttpStatus.CREATED).body(requisicaoService.insert(requisicao));
   }
 
   @DeleteMapping("/{id}")
@@ -69,6 +103,12 @@ public class RestauranteController {
   @PutMapping("/{id}")
   public ResponseEntity<Restaurante> update(@PathVariable Long id, @RequestBody Restaurante restaurante) {
     return ResponseEntity.ok(restauranteService.update(id, restaurante));
+  }
+
+  @PutMapping("/{idRestaurante}/atualizarRequisicoes")
+  public ResponseEntity<Void> atualizarRequisicoes(@PathVariable Long idRestaurante) {
+    restauranteService.atualizarRequisicoes(idRestaurante);
+    return ResponseEntity.noContent().build();
   }
 
 }

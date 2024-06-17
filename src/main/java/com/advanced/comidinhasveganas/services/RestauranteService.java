@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.advanced.comidinhasveganas.entities.Requisicao;
 import com.advanced.comidinhasveganas.entities.Restaurante;
 import com.advanced.comidinhasveganas.exceptions.ResourceNotFoundException;
 import com.advanced.comidinhasveganas.repositories.RestauranteRepository;
@@ -16,6 +17,9 @@ public class RestauranteService {
 
   @Autowired
   private RestauranteRepository restauranteRepository;
+
+  @Autowired
+  private PedidoService pedidoService;
 
   public List<Restaurante> findAll() {
     return restauranteRepository.findAll();
@@ -38,6 +42,17 @@ public class RestauranteService {
   @Transactional
   public void deleteById(Long id) {
     restauranteRepository.deleteById(id);
+  }
+
+  @Transactional
+  public void atualizarRequisicoes(Long restauranteId) {
+    Restaurante restaurante = restauranteRepository.findById(restauranteId)
+        .orElseThrow(() -> new ResourceNotFoundException("Restaurante não encontrado"));
+
+    restaurante.atualizarRequisicoes(); // Chama o método existente na entidade Restaurante
+    pedidoService.processarRequisicoes(restaurante.getRequisicoes());
+
+    restauranteRepository.save(restaurante); // Salva as mudanças no banco de dados
   }
 
   @Transactional
