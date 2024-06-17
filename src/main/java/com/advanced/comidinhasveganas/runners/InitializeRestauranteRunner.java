@@ -217,10 +217,8 @@ public class InitializeRestauranteRunner implements CommandLineRunner {
   }
 
   private void adicionarPedidoAberto(Scanner scanner, Requisicao requisicao, Restaurante restaurante) {
-    Cardapio cardapioAberto = restaurante.getCardapios().stream()
-        .filter(c -> !(c instanceof MenuFechado))
-        .findFirst()
-        .orElse(null);
+    Cardapio cardapioAberto = restaurante.getCardapios().stream().filter(c -> c.getNome().equals("Principal"))
+        .findFirst().orElse(null);
 
     if (cardapioAberto == null) {
       System.out.println("Cardápio aberto não encontrado.");
@@ -260,10 +258,7 @@ public class InitializeRestauranteRunner implements CommandLineRunner {
   }
 
   private void adicionarPedidoFechado(Scanner scanner, Requisicao requisicao, Restaurante restaurante) {
-    MenuFechado menuFechado = (MenuFechado) restaurante.getCardapios().stream()
-        .filter(c -> c instanceof MenuFechado)
-        .findFirst()
-        .orElse(null);
+    MenuFechado menuFechado = (MenuFechado) restaurante.getCardapios().get(1);
 
     if (menuFechado == null) {
       System.out.println("Menu fechado não encontrado.");
