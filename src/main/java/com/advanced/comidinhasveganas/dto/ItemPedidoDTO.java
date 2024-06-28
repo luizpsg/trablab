@@ -4,6 +4,10 @@ public class ItemPedidoDTO {
   private Long itemId;
   private Integer quantidade;
 
+  public ItemPedidoDTO(long l, int i) {
+    // TODO Auto-generated constructor stub
+  }
+
   // Getters and Setters
   public Long getItemId() {
     return itemId;
