@@ -3,6 +3,10 @@ package com.advanced.comidinhasveganas.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.advanced.comidinhasveganas.strategy.PrecoFechadoStrategy;
+import com.advanced.comidinhasveganas.strategy.PrecoNormalStrategy;
+import com.advanced.comidinhasveganas.strategy.PrecoStrategy;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -42,6 +46,11 @@ public class Pedido {
    * Preço total do pedido.
    */
   private double precoTotal;
+
+  /**
+   * Estratégia de cálculo do preço do pedido.
+   */
+  private PrecoStrategy precoStrategy;
 
   /**
    * Construtor padrão.
@@ -92,6 +101,7 @@ public class Pedido {
    */
   public void setTipoPedido(String tipoPedido) {
     this.tipoPedido = tipoPedido;
+    definirStrategy();
   }
 
   /**
@@ -123,19 +133,27 @@ public class Pedido {
 
   /**
    * Define o preço total do pedido com base no tipo de pedido.
-   * Para pedidos do tipo "normal", o preço total é a soma dos subtotais dos itens.
+   * Para pedidos do tipo "normal", o preço total é a soma dos subtotais dos
+   * itens.
    * Para pedidos do tipo "fechado", o preço total é fixo em 32.0.
    * 
    * @throws IllegalArgumentException Se o tipo de pedido for desconhecido.
    */
-  public void setPrecoTotal() {
+  private void definirStrategy() {
     if (tipoPedido.equalsIgnoreCase("normal")) {
-      precoTotal = itens.stream().mapToDouble(ItemPedido::getSubTotal).sum();
+      this.precoStrategy = new PrecoNormalStrategy(itens);
     } else if (tipoPedido.equalsIgnoreCase("fechado")) {
-      precoTotal = 32.0;
+      this.precoStrategy = new PrecoFechadoStrategy();
     } else {
       throw new IllegalArgumentException("Tipo de pedido desconhecido.");
     }
+  }
+
+  /**
+   * Calcula o preço total do pedido com base na estratégia de cálculo de preço.
+   */
+  public void setPrecoTotal() {
+    precoTotal = precoStrategy.calcularPreco();
   }
 
   /**
