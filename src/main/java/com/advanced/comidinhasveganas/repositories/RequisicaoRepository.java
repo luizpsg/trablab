@@ -7,3 +7,4 @@ import com.advanced.comidinhasveganas.entities.Requisicao;
 public interface RequisicaoRepository extends JpaRepository<Requisicao, Long> {
 
 }
+

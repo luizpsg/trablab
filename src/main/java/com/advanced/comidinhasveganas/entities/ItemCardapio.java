@@ -1,96 +1,134 @@
 package com.advanced.comidinhasveganas.entities;
 
+import com.advanced.comidinhasveganas.entities.enums.TipoItem;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-import java.util.HashSet;
-import java.util.Set;
-
+/**
+ * Representa um item do cardápio em um restaurante vegano.
+ * Cada item do cardápio tem um ID único, um nome, um preço e um tipo.
+ */
 @Entity
-@Table(name = "tb_cardapio")
+@Table(name = "tb_itens_cardapio")
 public class ItemCardapio {
 
+  /**
+   * Identificador único do item do cardápio.
+   */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  /**
+   * Nome do item do cardápio.
+   */
   private String nome;
 
+  /**
+   * Preço do item do cardápio.
+   */
   private Double preco;
 
-  private boolean isComidaNoMenuFechado = false;
+  /**
+   * Tipo do item do cardápio.
+   */
+  @Enumerated(EnumType.STRING)
+  private TipoItem tipo;
 
-  private boolean isBebidaNoMenuFechado = false;
-
-  @OneToMany(mappedBy = "id.item")
-  private Set<PedidoItemCardapio> pedidos = new HashSet<>();
-
+  /**
+   * Construtor padrão.
+   */
   public ItemCardapio() {
   }
 
-  public ItemCardapio(Long id, String nome, Double preco, boolean isComidaNoMenuFechado,
-      boolean isBebidaNoMenuFechado) {
-    this.id = id;
+  /**
+   * Construtor para inicializar o item do cardápio com nome, preço e tipo específicos.
+   *
+   * @param nome Nome do item do cardápio.
+   * @param preco Preço do item do cardápio.
+   * @param tipo Tipo do item do cardápio.
+   */
+  public ItemCardapio(String nome, Double preco, TipoItem tipo) {
     this.nome = nome;
     this.preco = preco;
-    this.isComidaNoMenuFechado = isComidaNoMenuFechado;
-    this.isBebidaNoMenuFechado = isBebidaNoMenuFechado;
+    this.tipo = tipo;
   }
 
+  /**
+   * Obtém o identificador único do item do cardápio.
+   *
+   * @return Identificador único do item do cardápio.
+   */
   public Long getId() {
     return id;
   }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
-
+  /**
+   * Obtém o nome do item do cardápio.
+   *
+   * @return Nome do item do cardápio.
+   */
   public String getNome() {
     return nome;
   }
 
+  /**
+   * Define o nome do item do cardápio.
+   *
+   * @param nome Nome do item do cardápio.
+   */
   public void setNome(String nome) {
     this.nome = nome;
   }
 
+  /**
+   * Obtém o preço do item do cardápio.
+   *
+   * @return Preço do item do cardápio.
+   */
   public Double getPreco() {
     return preco;
   }
 
+  /**
+   * Define o preço do item do cardápio.
+   *
+   * @param preco Preço do item do cardápio.
+   */
   public void setPreco(Double preco) {
     this.preco = preco;
   }
 
-  public boolean isComidaNoMenuFechado() {
-    return isComidaNoMenuFechado;
+  /**
+   * Obtém o tipo do item do cardápio.
+   *
+   * @return Tipo do item do cardápio.
+   */
+  public TipoItem getTipo() {
+    return tipo;
   }
 
-  public void setComidaNoMenuFechado(boolean isComidaNoMenuFechado) {
-    this.isComidaNoMenuFechado = isComidaNoMenuFechado;
+  /**
+   * Define o tipo do item do cardápio.
+   *
+   * @param tipo Tipo do item do cardápio.
+   */
+  public void setTipo(TipoItem tipo) {
+    this.tipo = tipo;
   }
 
-  public boolean isBebidaNoMenuFechado() {
-    return isBebidaNoMenuFechado;
-  }
-
-  public void setBebidaNoMenuFechado(boolean isBebidaNoMenuFechado) {
-    this.isBebidaNoMenuFechado = isBebidaNoMenuFechado;
-  }
-
-  public Set<Pedido> getPedidos() {
-    Set<Pedido> set = new HashSet<>();
-    for (PedidoItemCardapio x : pedidos) {
-      set.add(x.getPedido());
-    }
-    return set;
-  }
-
+  /**
+   * Retorna uma representação em string do item do cardápio.
+   *
+   * @return Uma representação em string do item do cardápio.
+   */
   @Override
   public String toString() {
-    return "ItemCardapio [id=" + id + ", nome=" + nome + ", preco=" + preco + "]";
+    return "ItemCardapio [id=" + id + ", nome=" + nome + ", preco=" + preco + ", tipo=" + tipo + "]";
   }
 }

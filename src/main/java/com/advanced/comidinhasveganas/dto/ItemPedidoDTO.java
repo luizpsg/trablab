@@ -1,17 +1,10 @@
 package com.advanced.comidinhasveganas.dto;
 
-public class ItemRequest {
+public class ItemPedidoDTO {
   private Long itemId;
   private Integer quantidade;
 
-  public ItemRequest() {
-  }
-
-  public ItemRequest(Long itemId, Integer quantidade) {
-    this.itemId = itemId;
-    this.quantidade = quantidade;
-  }
-
+  // Getters and Setters
   public Long getItemId() {
     return itemId;
   }

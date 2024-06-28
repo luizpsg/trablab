@@ -8,38 +8,34 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.advanced.comidinhasveganas.entities.Pedido;
-import com.advanced.comidinhasveganas.entities.Requisicao;
 import com.advanced.comidinhasveganas.repositories.PedidoRepository;
-import com.advanced.comidinhasveganas.repositories.RequisicaoRepository;
 
 @Service
 public class PedidoService {
 
   @Autowired
-  private PedidoRepository repository;
-
-  @Autowired
-  private RequisicaoRepository requisicaoRepository;
+  private PedidoRepository pedidoRepository;
 
   public List<Pedido> findAll() {
-    return repository.findAll();
+    return pedidoRepository.findAll();
   }
 
   public Optional<Pedido> findById(Long id) {
-    return repository.findById(id);
+    return pedidoRepository.findById(id);
   }
 
   @Transactional
-  public Pedido insert(Pedido pedido, Long idRequisicao) {
-    Requisicao requisicao = requisicaoRepository.findById(idRequisicao)
-        .orElseThrow(() -> new RuntimeException("Requisição não encontrada"));
-    pedido.setRequisicao(requisicao);
-    repository.save(pedido);
-    return pedido;
+  public Pedido insert(Pedido pedido) {
+    return pedidoRepository.save(pedido);
   }
 
   @Transactional
-  public void delete(Long id) {
-    repository.deleteById(id);
+  public void deleteAll() {
+    pedidoRepository.deleteAll();
+  }
+
+  @Transactional
+  public void deleteById(Long id) {
+    pedidoRepository.deleteById(id);
   }
 }

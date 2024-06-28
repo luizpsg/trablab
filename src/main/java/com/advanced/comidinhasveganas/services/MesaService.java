@@ -14,47 +14,34 @@ import com.advanced.comidinhasveganas.repositories.MesaRepository;
 public class MesaService {
 
   @Autowired
-  private MesaRepository repository;
+  private MesaRepository mesaRepository;
 
   public List<Mesa> findAll() {
-    return repository.findAll();
+    return mesaRepository.findAll();
   }
 
   public Optional<Mesa> findById(Long id) {
-    return repository.findById(id);
+    return mesaRepository.findById(id);
   }
 
   @Transactional
   public Mesa insert(Mesa mesa) {
-    return repository.save(mesa);
+    return mesaRepository.save(mesa);
   }
 
   @Transactional
-  public void delete(Long id) {
-    repository.deleteById(id);
-  }
-
-  @Transactional
-  public Mesa update(Long id, Mesa mesa) {
-    Mesa entity = repository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Mesa não encontrada"));
-    updateData(entity, mesa);
-    return repository.save(entity);
-  }
-
-  private void updateData(Mesa entity, Mesa mesa) {
-    entity.setLugares(mesa.getLugares());
-    entity.setIsOcupada(mesa.getIsOcupada());
-  }
-
-  public Optional<Mesa> findMesaDisponivel(int quantidadePessoas) {
-    return repository.findAll().stream()
-        .filter(m -> !m.getIsOcupada() && m.getLugares() >= quantidadePessoas)
-        .findFirst();
+  public List<Mesa> insertAll(List<Mesa> mesas) {
+    return mesaRepository.saveAll(mesas);
   }
 
   @Transactional
   public void deleteAll() {
-    repository.deleteAll();
+    mesaRepository.deleteAll();
   }
+
+  @Transactional
+  public void deleteById(Long id) {
+    mesaRepository.deleteById(id);
+  }
+
 }

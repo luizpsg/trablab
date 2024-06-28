@@ -13,40 +13,42 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.advanced.comidinhasveganas.entities.Requisicao;
-import com.advanced.comidinhasveganas.services.RequisicaoService;
+import com.advanced.comidinhasveganas.entities.ItemPedido;
+import com.advanced.comidinhasveganas.services.ItemPedidoService;
 
 @RestController
-@RequestMapping("/requisicoes")
-public class RequisicaoController {
+@RequestMapping("/itens-pedido")
+public class ItemPedidoController {
 
   @Autowired
-  private RequisicaoService requisicaoService;
+  private ItemPedidoService itemPedidoService;
 
   @GetMapping
-  public ResponseEntity<List<Requisicao>> findAll() {
-    return ResponseEntity.ok(requisicaoService.findAll());
+  public ResponseEntity<List<ItemPedido>> findAll() {
+    return ResponseEntity.ok(itemPedidoService.findAll());
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Requisicao> findById(@PathVariable Long id) {
-    return ResponseEntity.ok().body(requisicaoService.findById(id));
+  public ResponseEntity<ItemPedido> findById(@PathVariable Long id) {
+    return ResponseEntity.ok()
+        .body(itemPedidoService.findById(id)
+            .orElseThrow(() -> new RuntimeException("Item de pedido não encontrado")));
   }
 
   @PostMapping
-  public ResponseEntity<Requisicao> insert(@RequestBody Requisicao requisicao) {
-    return ResponseEntity.status(HttpStatus.CREATED).body(requisicaoService.insert(requisicao));
+  public ResponseEntity<ItemPedido> insert(@RequestBody ItemPedido itemPedido) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(itemPedidoService.insert(itemPedido));
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-    requisicaoService.deleteById(id);
+    itemPedidoService.deleteById(id);
     return ResponseEntity.noContent().build();
   }
 
   @DeleteMapping
   public ResponseEntity<Void> deleteAll() {
-    requisicaoService.deleteAll();
+    itemPedidoService.deleteAll();
     return ResponseEntity.noContent().build();
   }
 
