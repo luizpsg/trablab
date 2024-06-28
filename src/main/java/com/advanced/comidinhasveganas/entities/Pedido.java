@@ -3,10 +3,12 @@ package com.advanced.comidinhasveganas.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.advanced.comidinhasveganas.converters.PrecoStrategyConverter;
 import com.advanced.comidinhasveganas.strategy.PrecoFechadoStrategy;
 import com.advanced.comidinhasveganas.strategy.PrecoNormalStrategy;
 import com.advanced.comidinhasveganas.strategy.PrecoStrategy;
 
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -50,6 +52,7 @@ public class Pedido {
   /**
    * Estratégia de cálculo do preço do pedido.
    */
+  @Convert(converter = PrecoStrategyConverter.class)
   private PrecoStrategy precoStrategy;
 
   /**
